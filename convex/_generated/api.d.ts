@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as data_questionSets from "../data/questionSets.js";
 import type * as myFunctions from "../myFunctions.js";
 
 import type {
@@ -17,6 +18,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "data/questionSets": typeof data_questionSets;
   myFunctions: typeof myFunctions;
 }>;
 
