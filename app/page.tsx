@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { Doc } from "../convex/_generated/dataModel";
+import type { Doc, Id } from "../convex/_generated/dataModel";
 
 export default function Home() {
   return (
@@ -77,10 +77,7 @@ function Content() {
       </div>
 
       <div className="card flex flex-col gap-2">
-        <button
-          className="btn-green"
-          onClick={handleCreateGameSession}
-        >
+        <button className="btn-green" onClick={handleCreateGameSession}>
           Opprett spill
         </button>
       </div>
@@ -106,11 +103,20 @@ function Content() {
   );
 }
 
+type GameSessionWithPopulatedQuestionsSet = Omit<
+  Doc<"gameSessions">,
+  "questionsSet"
+> & {
+  questionsSet?:
+    | (Doc<"questionSets"> & { questions: Doc<"questions">[] })
+    | null;
+};
+
 function GameSessionCard({
   gameSession,
   onClick,
 }: {
-  gameSession: Doc<"gameSessions">;
+  gameSession: GameSessionWithPopulatedQuestionsSet;
   onClick: () => void;
 }) {
   return (
@@ -119,7 +125,7 @@ function GameSessionCard({
       onClick={() => onClick()}
     >
       <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
-        {gameSession.questions.length} questions
+        {gameSession.questionsSet?.questions?.length ?? 0} questions
       </h3>
       <p className="text-xs text-slate-600 dark:text-slate-400">
         {new Date(gameSession.createdAt).toLocaleDateString()}

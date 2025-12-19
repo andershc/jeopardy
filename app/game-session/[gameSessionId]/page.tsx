@@ -30,11 +30,11 @@ export default function GameSession({
     setTeamName("");
   };
 
-  const handleSelectQuestionSet = async (questionSetId: string) => {
+  const handleSelectQuestionSet = async (questionSetId: Id<"questionSets">) => {
     if (!gameSession) return;
     await selectQuestionSet({
       gameSessionId: gameSession._id,
-      questionSetId,
+      questionSetId: questionSetId,
     });
   };
 
@@ -115,8 +115,7 @@ export default function GameSession({
 
   const hasTeams = gameSession.teams && gameSession.teams.length > 0;
   const hasQuestionSet =
-    gameSession.selectedQuestionSet !== undefined &&
-    gameSession.selectedQuestionSet !== null;
+    gameSession.questionsSet !== undefined && gameSession.questionsSet !== null;
   const canStartGame = hasTeams && hasQuestionSet;
 
   return (
@@ -197,10 +196,10 @@ export default function GameSession({
               </div>
             ) : (
               <div className="text-center py-12 border-2 border-dashed border-card-border rounded-lg">
-                <p className="text-neutral-500 dark:text-neutral-400 text-lg mb-2">
+                <p className="text-neutral-500 dark:text-neutral-800 text-lg mb-2">
                   No teams yet
                 </p>
-                <p className="text-sm text-neutral-400 dark:text-neutral-500">
+                <p className="text-sm text-neutral-400 dark:text-neutral-800">
                   Create your first team below!
                 </p>
               </div>
@@ -214,32 +213,35 @@ export default function GameSession({
               Select Question Set
             </h2>
             <div className="flex flex-col gap-3">
-              {questionSets.map((set) => (
-                <button
-                  key={set.id}
-                  onClick={() => handleSelectQuestionSet(set.id)}
-                  className={`text-left p-4 rounded-lg border-2 transition-all duration-200 dark:bg-neutral-100 ${
-                    gameSession.selectedQuestionSet === set.id
-                      ? "border-festive-gold bg-festive-gold/10 dark:bg-festive-gold/20"
-                      : "border-card-border hover:border-festive-gold/50 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:dark:text-neutral-300"
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-bold text-lg mb-1">{set.name}</h3>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                        {set.description}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
-                        {set.questions.length} questions
-                      </p>
+              {questionSets.length === 0 ? (
+                <p className="text-neutral-500 dark:text-neutral-800 text-lg mb-2">
+                  No question sets found
+                </p>
+              ) : (
+                questionSets.map((set) => (
+                  <button
+                    key={set._id}
+                    onClick={() => handleSelectQuestionSet(set._id)}
+                    className={`text-left p-4 rounded-lg border-2 transition-all duration-200 dark:bg-neutral-100 ${
+                      gameSession.questionsSet === set._id
+                        ? "border-festive-gold bg-festive-gold/10 dark:bg-festive-gold/20"
+                        : "border-card-border hover:border-festive-gold/50 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:dark:text-neutral-300"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-bold text-lg mb-1">{set.name}</h3>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-2">
+                          {set.questions.length} questions
+                        </p>
+                      </div>
+                      {gameSession.questionsSet === set._id && (
+                        <span className="text-2xl">✓</span>
+                      )}
                     </div>
-                    {gameSession.selectedQuestionSet === set.id && (
-                      <span className="text-2xl">✓</span>
-                    )}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))
+              )}
             </div>
           </div>
 

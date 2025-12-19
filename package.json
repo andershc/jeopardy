@@ -6,13 +6,12 @@
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
     "dev:frontend": "next dev",
     "dev:backend": "convex dev",
-    "predev": "pnpm generate:question-sets && convex dev --until-success && convex dashboard",
-    "build": "pnpm generate:question-sets && next build",
+    "predev": "convex dev --until-success && convex dashboard",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern \"convex/_generated/**\"",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "generate:question-sets": "tsx scripts/generate-question-sets.ts"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "convex": "^1.31.0",

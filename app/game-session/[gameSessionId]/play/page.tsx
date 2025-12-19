@@ -50,11 +50,32 @@ export default function PlayPage({
     return Object.keys(questionsByCategory).sort();
   }, [questionsByCategory]);
 
+  // Helper function to check if a question is answered by any team
+  const isQuestionAnswered = useMemo(() => {
+    if (!gameSession?.teams || !questions) return () => false;
+    const answeredQuestionIds = new Set<Id<"questions">>();
+    gameSession.teams.forEach((team) => {
+      team.answeredQuestions.forEach((qId) => answeredQuestionIds.add(qId));
+    });
+    return (questionId: Id<"questions">) => answeredQuestionIds.has(questionId);
+  }, [gameSession?.teams, questions]);
+
+  // Helper function to check if a question is selected by any team
+  const isQuestionSelected = useMemo(() => {
+    if (!gameSession?.teams || !questions) return () => false;
+    const selectedQuestionIds = new Set<Id<"questions">>();
+    gameSession.teams.forEach((team) => {
+      team.selectedQuestions.forEach((qId) => selectedQuestionIds.add(qId));
+    });
+    return (questionId: Id<"questions">) => selectedQuestionIds.has(questionId);
+  }, [gameSession?.teams, questions]);
+
   // Check if all questions have been answered
   const isGameOver = useMemo(() => {
     if (!questions || questions.length === 0) return false;
-    return questions.every((q) => q.answeredByTeamId !== undefined);
-  }, [questions]);
+    const checkAnswered = isQuestionAnswered;
+    return questions.every((q) => checkAnswered(q._id));
+  }, [questions, isQuestionAnswered]);
 
   // Sort teams by points for leaderboard
   const sortedTeams = useMemo(() => {
@@ -62,13 +83,19 @@ export default function PlayPage({
     return [...gameSession.teams].sort((a, b) => b.points - a.points);
   }, [gameSession?.teams]);
 
-  const currentTeam = gameSession?.teams?.sort((a, b) => a._id.localeCompare(b._id))[currentTeamIndex];
+  const currentTeam = gameSession?.teams?.sort((a, b) =>
+    a._id.localeCompare(b._id),
+  )[currentTeamIndex];
 
   const handleQuestionClick = async (questionId: Id<"questions">) => {
     if (!currentTeam) return;
 
     const question = questions?.find((q) => q._id === questionId);
-    if (!question || question.answeredByTeamId || question.selectedByTeamId) {
+    if (!question) return;
+
+    const checkAnswered = isQuestionAnswered;
+    const checkSelected = isQuestionSelected;
+    if (checkAnswered(questionId) || checkSelected(questionId)) {
       return;
     }
 
@@ -166,7 +193,10 @@ export default function PlayPage({
             </h1>
             <h1 className="text-3xl font-bold">🎯</h1>
             <div />
-            <button className="btn-primary ml-4" onClick={() => router.push(`/`)}>
+            <button
+              className="btn-primary ml-4"
+              onClick={() => router.push(`/`)}
+            >
               Hjem
             </button>
           </div>
@@ -180,7 +210,8 @@ export default function PlayPage({
                 🎉 Spillet er over! 🎉
               </h1>
               <p className="text-xl font-semibold text-neutral-600 dark:text-neutral-900">
-                Gratulerer med seieren: <span className="text-festive-gold">{sortedTeams[0].name}</span>
+                Gratulerer med seieren:{" "}
+                <span className="text-festive-gold">{sortedTeams[0].name}</span>
               </p>
             </div>
 
@@ -221,10 +252,16 @@ export default function PlayPage({
                         >
                           {index + 1}
                         </div>
-                        <h3 className={`text-xl font-bold ${index === 0 ? "text-neutral-900" : "text-neutral-600 dark:text-neutral-400"}`}>{team.name}</h3>
+                        <h3
+                          className={`text-xl font-bold ${index === 0 ? "text-neutral-900" : "text-neutral-600 dark:text-neutral-400"}`}
+                        >
+                          {team.name}
+                        </h3>
                       </div>
                       <div className="flex flex-col items-start gap-2 mt-4">
-                        <span className={`text-sm font-semibold text-neutral-600 ${index === 0 ? "text-neutral-900" : "text-neutral-600 dark:text-neutral-400"}`}>
+                        <span
+                          className={`text-sm font-semibold text-neutral-600 ${index === 0 ? "text-neutral-900" : "text-neutral-600 dark:text-neutral-400"}`}
+                        >
                           Poeng:
                         </span>
                         <span
@@ -288,45 +325,44 @@ export default function PlayPage({
                 )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {gameSession.teams
-                  .map((team, index) => (
-                    <div
-                      key={team._id}
-                      className={`group relative overflow-hidden rounded-lg border-2 p-5 transition-all duration-300 ${
-                        team._id === currentTeam?._id
-                          ? "border-festive-gold bg-festive-gold/10 dark:bg-festive-gold/70 text-foreground dark:text-foreground"
-                          : "border-card-border bg-linear-to-br from-neutral-50 to-neutral-100 dark:from-neutral-800 dark:to-neutral-700 text-background dark:text-neutral-300"
-                      }`}
-                    >
-                      <div className="absolute top-0 right-0 w-20 h-20 bg-festive-gold/10 dark:bg-festive-gold/20 rounded-bl-full"></div>
-                      <div className="relative">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-md ${
-                              index === 0
-                                ? "bg-purple-600"
-                                : index === 1
-                                  ? "bg-festive-red"
-                                  : index === 2
-                                    ? "bg-festive-green"
-                                    : index === 3
-                                      ? "bg-festive-navy"
-                                      : "bg-neutral-600"
-                            }`}
-                          >
-                            {index + 1}
-                          </div>
-                          <h3 className="text-lg font-bold">{team.name}</h3>
+                {gameSession.teams.map((team, index) => (
+                  <div
+                    key={team._id}
+                    className={`group relative overflow-hidden rounded-lg border-2 p-5 transition-all duration-300 ${
+                      team._id === currentTeam?._id
+                        ? "border-festive-gold bg-festive-gold/10 dark:bg-festive-gold/70 text-foreground dark:text-foreground"
+                        : "border-card-border bg-linear-to-br from-neutral-50 to-neutral-100 dark:from-neutral-800 dark:to-neutral-700 text-background dark:text-neutral-300"
+                    }`}
+                  >
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-festive-gold/10 dark:bg-festive-gold/20 rounded-bl-full"></div>
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-md ${
+                            index === 0
+                              ? "bg-purple-600"
+                              : index === 1
+                                ? "bg-festive-red"
+                                : index === 2
+                                  ? "bg-festive-green"
+                                  : index === 3
+                                    ? "bg-festive-navy"
+                                    : "bg-neutral-600"
+                          }`}
+                        >
+                          {index + 1}
                         </div>
-                        <div className="flex font-semibold items-center gap-2 mt-3">
-                          <span className="text">Poeng:</span>
-                          <span className="text-2xl font-bold text-festive-gold">
-                            {team.points}
-                          </span>
-                        </div>
+                        <h3 className="text-lg font-bold">{team.name}</h3>
+                      </div>
+                      <div className="flex font-semibold items-center gap-2 mt-3">
+                        <span className="text">Poeng:</span>
+                        <span className="text-2xl font-bold text-festive-gold">
+                          {team.points}
+                        </span>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -365,6 +401,8 @@ export default function PlayPage({
                               {question ? (
                                 <QuestionCard
                                   question={question}
+                                  isAnswered={isQuestionAnswered(question._id)}
+                                  isSelected={isQuestionSelected(question._id)}
                                   onClick={() =>
                                     handleQuestionClick(question._id)
                                   }
@@ -404,13 +442,15 @@ export default function PlayPage({
 
 function QuestionCard({
   question,
+  isAnswered,
+  isSelected,
   onClick,
 }: {
   question: Doc<"questions">;
+  isAnswered: boolean;
+  isSelected: boolean;
   onClick: () => void;
 }) {
-  const isAnswered = !!question.answeredByTeamId;
-  const isSelected = !!question.selectedByTeamId;
   const isFlipped = isSelected || isAnswered;
 
   return (
@@ -455,9 +495,7 @@ function QuestionModal({
   onClose: () => void;
 }) {
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-    >
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div
         className="border border-card-border rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-200 max-w-2xl w-full bg-card-bg"
         onClick={(e) => e.stopPropagation()}

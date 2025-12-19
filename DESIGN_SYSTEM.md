@@ -94,7 +94,7 @@ The design system automatically adapts to dark mode using `prefers-color-scheme`
 ### Festive Card
 
 ```tsx
-<div className="card bg-gradient-to-br from-warm-cream to-warm-beige border-festive-gold/20">
+<div className="card bg-linear-to-br from-warm-cream to-warm-beige border-festive-gold/20">
   Content
 </div>
 ```
@@ -102,7 +102,7 @@ The design system automatically adapts to dark mode using `prefers-color-scheme`
 ### Team Card
 
 ```tsx
-<div className="rounded-lg border-2 border-card-border bg-gradient-to-br from-neutral-50 to-neutral-100 p-5 hover:border-festive-gold transition-all">
+<div className="rounded-lg border-2 border-card-border bg-linear-to-br from-neutral-50 to-neutral-100 p-5 hover:border-festive-gold transition-all">
   Team content
 </div>
 ```
@@ -110,7 +110,7 @@ The design system automatically adapts to dark mode using `prefers-color-scheme`
 ### Gradient Text
 
 ```tsx
-<h1 className="bg-gradient-to-r from-festive-red via-festive-gold to-festive-green bg-clip-text text-transparent">
+<h1 className="bg-linear-to-r from-festive-red via-festive-gold to-festive-green bg-clip-text text-transparent">
   Festive Title
 </h1>
 ```

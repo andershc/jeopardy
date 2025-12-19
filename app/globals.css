@@ -144,12 +144,11 @@ body {
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
   line-height: 1.6;
-  background-image: url('/the-last-supper.png');
+  background-image: url("/the-last-supper.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-
 }
 
 /* Utility Classes */
