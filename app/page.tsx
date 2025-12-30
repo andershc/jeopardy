@@ -20,7 +20,7 @@ export default function Home() {
             />
           </div>
           <h1 className="font-semibold text-slate-800 dark:text-slate-200">
-            Christmas Jeopardy
+            Jeopardy
           </h1>
         </div>
       </header>

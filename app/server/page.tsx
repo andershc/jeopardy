@@ -14,7 +14,7 @@ export default async function ServerPage() {
           <Image src="/cute-santa.png" alt="Convex Logo" width={48} height={48} />
         </div>
         <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-200">
-          Christmas Jeopardy
+          Jeopardy
         </h1>
       </div>
       <div className="flex flex-col gap-4 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 p-6 rounded-xl shadow-md">

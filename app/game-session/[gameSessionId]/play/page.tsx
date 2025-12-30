@@ -183,7 +183,7 @@ export default function PlayPage({
   // Show game over screen if all questions are answered
   if (isGameOver) {
     return (
-      <div className="min-h-screen flex flex-col bg-[url('/the-last-supper.png')] bg-cover bg-center bg-no-repeat">
+      <div className="min-h-screen flex flex-col bg-[url('/new-years-supper.png')] bg-cover bg-center bg-no-repeat">
         {/* Header */}
         <header className="shrink-0 flex flex-row justify-between items-center top-0 z-10 bg-card-bg/95 backdrop-blur-md border-b border-card-border shadow-sm">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-2 w-full">
@@ -286,7 +286,7 @@ export default function PlayPage({
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[url('/the-last-supper.png')] bg-cover bg-center bg-no-repeat">
+    <div className="h-screen flex flex-col bg-[url('/new-years-supper.png')] bg-cover bg-center bg-no-repeat">
       {/* Header */}
       <header className="shrink-0 flex flex-row justify-between items-center top-0 z-10 bg-card-bg/95 backdrop-blur-md border-b border-card-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-2 w-full">
