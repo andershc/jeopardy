@@ -11,6 +11,7 @@ export default defineSchema({
     questionsSet: v.optional(v.id("questionSets")),
     isStarted: v.boolean(),
     selectedQuestionSet: v.optional(v.string()),
+    surpriseChallenges: v.optional(v.record(v.string(), v.string())),
   }),
   teams: defineTable({
     name: v.string(),

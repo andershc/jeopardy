@@ -5,6 +5,15 @@ import { Id } from "./_generated/dataModel";
 // Write your Convex functions in any file inside this directory (`convex`).
 // See https://docs.convex.dev/functions for more.
 
+// Pool of action challenges for surprise questions
+const SURPRISE_CHALLENGES = [
+  "Breezer-race! 🏁 (Eller hva enn dere har tilgjengelig)",
+  "Ta en shot! 🥃",
+  "Hold en tale for vertskapet 🗣️",
+  "Gå bussruta! 🚌",
+  "Felles skål! 🍻",
+];
+
 export const createGameSession = mutation({
   args: {},
   handler: async (ctx) => {
@@ -205,9 +214,44 @@ export const startGame = mutation({
       throw new Error("Question set not found");
     }
 
+    // Get all questions for this question set
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_questionSet", (q) =>
+        q.eq("questionSetId", gameSession.questionsSet as Id<"questionSets">),
+      )
+      .collect();
+
+    // Calculate 20% of questions (rounded up)
+    const numSurprises = Math.ceil(questions.length * 0.2);
+
+    // Randomly select questions for surprises
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    const selectedQuestions = shuffled.slice(0, numSurprises);
+
+    // Create surprise challenges map
+    const surpriseChallenges: Record<string, string> = {};
+    const availableChallenges = [...SURPRISE_CHALLENGES];
+
+    selectedQuestions.forEach((question) => {
+      // Randomly select a challenge from the pool
+      const challengeIndex = Math.floor(
+        Math.random() * availableChallenges.length,
+      );
+      const challenge = availableChallenges[challengeIndex];
+      surpriseChallenges[question._id] = challenge;
+      // Remove used challenge to avoid duplicates (optional - can reuse if desired)
+      availableChallenges.splice(challengeIndex, 1);
+      // If we run out of challenges, reset the pool
+      if (availableChallenges.length === 0) {
+        availableChallenges.push(...SURPRISE_CHALLENGES);
+      }
+    });
+
     await ctx.db.patch(args.gameSessionId, {
       questionsSet: questionSet._id,
       isStarted: true,
+      surpriseChallenges,
     });
   },
 });

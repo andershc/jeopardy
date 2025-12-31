@@ -1,7 +1,7 @@
 "use client";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { use, useState, useMemo } from "react";
+import { use, useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 
@@ -427,6 +427,7 @@ export default function PlayPage({
       {selectedQuestion && (
         <QuestionModal
           question={selectedQuestion}
+          gameSession={gameSession}
           showAnswer={showAnswer}
           onRevealAnswer={handleRevealAnswer}
           onAnswerSubmit={handleAnswerSubmit}
@@ -483,17 +484,70 @@ function QuestionCard({
 
 function QuestionModal({
   question,
+  gameSession,
   showAnswer,
   onRevealAnswer,
   onAnswerSubmit,
   onClose,
 }: {
   question: Doc<"questions">;
+  gameSession: ReturnType<typeof useQuery<typeof api.myFunctions.getGameSession>>;
   showAnswer: boolean;
   onRevealAnswer: () => void;
   onAnswerSubmit: (isCorrect: boolean) => void;
   onClose: () => void;
 }) {
+  const [showSurprise, setShowSurprise] = useState(true);
+  const [surpriseCompleted, setSurpriseCompleted] = useState(false);
+
+  // Check if this question has a surprise challenge
+  const surpriseChallenge =
+    gameSession?.surpriseChallenges?.[question._id] ?? null;
+
+  // Reset surprise state when question changes
+  useEffect(() => {
+    setShowSurprise(true);
+    setSurpriseCompleted(false);
+  }, [question._id]);
+
+  // Show surprise challenge first if it exists and hasn't been completed
+  if (surpriseChallenge && showSurprise && !surpriseCompleted) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div
+          className="border-2 border-festive-gold rounded-xl p-8 shadow-md hover:shadow-lg transition-all duration-200 max-w-2xl w-full bg-linear-to-br from-festive-gold/20 via-festive-red/20 to-festive-green/20 dark:from-festive-gold/30 dark:via-festive-red/30 dark:to-festive-green/30 backdrop-blur-sm"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col gap-6 items-center text-center">
+            <div className="text-6xl mb-4">🎁</div>
+            <h2 className="text-4xl font-bold text-foreground dark:text-neutral-800">
+              Overraskelse!
+            </h2>
+
+            <div className="bg-card-bg/90 dark:bg-card-bg/90 p-8 rounded-lg border-2 border-festive-gold w-full">
+              <p className="text-3xl font-bold text-festive-red dark:text-festive-red mb-4">
+                Utfordring:
+              </p>
+              <p className="text-2xl font-semibold text-foreground dark:text-neutral-800">
+                {surpriseChallenge}
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                setSurpriseCompleted(true);
+                setShowSurprise(false);
+              }}
+              className="btn-primary w-full text-lg py-4 bg-festive-gold hover:bg-festive-gold/80 text-white font-bold"
+            >
+              Fortsett til spørsmål →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div
