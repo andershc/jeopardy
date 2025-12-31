@@ -108,7 +108,7 @@ type GameSessionWithPopulatedQuestionsSet = Omit<
   "questionsSet"
 > & {
   questionsSet?:
-    | (Doc<"questionSets"> & { questions: Doc<"questions">[] })
+    | (Doc<"questionSets"> & { name: string, questions: Doc<"questions">[] })
     | null;
 };
 
@@ -119,25 +119,57 @@ function GameSessionCard({
   gameSession: GameSessionWithPopulatedQuestionsSet;
   onClick: () => void;
 }) {
+  const questionCount = gameSession.questionsSet?.questions?.length ?? 0;
+  const isStarted = gameSession.isStarted;
+  const questionSetName = gameSession.questionsSet?.name ?? "No Question Set Selected";
+
   return (
     <button
-      className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 p-5 rounded-xl h-36 overflow-auto border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] group cursor-pointer"
+      className="group relative overflow-hidden card bg-card-bg hover:bg-warm-beige/30 dark:hover:bg-neutral-800/80 border-2 border-card-border hover:border-festive-gold/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl cursor-pointer text-left"
       onClick={() => onClick()}
     >
-      <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
-        {gameSession.questionsSet?.questions?.length ?? 0} questions
-      </h3>
-      <p className="text-xs text-slate-600 dark:text-slate-400">
-        {new Date(gameSession.createdAt).toLocaleDateString()}
-      </p>
-      <p className="text-xs text-slate-600 dark:text-slate-400">
-        {gameSession.isStarted ? "Started" : "Not Started"}
-      </p>
-      <p className="text-xs text-slate-600 dark:text-slate-400">
-        {gameSession.selectedQuestionSet
-          ? gameSession.selectedQuestionSet
-          : "No Question Set Selected"}
-      </p>
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-20 h-20 bg-festive-gold/10 dark:bg-festive-gold/20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div className="relative flex flex-col gap-3 p-5">
+        {/* Header with question set name */}
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg font-bold text-foreground dark:text-neutral-800 group-hover:text-festive-gold transition-colors flex-1 line-clamp-2">
+            {questionSetName}
+          </h3>
+          {/* Status badge */}
+          <span
+            className={`shrink-0 px-3 py-1 rounded-full text-xs font-semibold ${
+              isStarted
+                ? "bg-festive-green dark:bg-festive-green text-festive-green dark:text-accent-green-light"
+                : "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-700"
+            }`}
+          >
+            {isStarted ? "▶ Started" : "○ Not Started"}
+          </span>
+        </div>
+
+        {/* Question count with icon */}
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">❓</span>
+          <span className="text-base font-semibold text-neutral-800 dark:text-neutral-700">
+            {questionCount} {questionCount === 1 ? "question" : "questions"}
+          </span>
+        </div>
+
+        {/* Date */}
+        <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-600">
+          <span>📅</span>
+          <span>{new Date(gameSession.createdAt).toLocaleDateString("nb-NO", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}</span>
+        </div>
+
+        {/* Hover indicator */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-festive-red via-festive-gold to-festive-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+      </div>
     </button>
   );
 }
