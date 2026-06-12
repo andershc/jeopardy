@@ -13,14 +13,15 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3">
             <Image
-              src="/cute-santa.png"
-              alt="Convex Logo"
+              src="/football.svg"
+              alt="Fotball"
               width={32}
               height={32}
+              unoptimized
             />
           </div>
           <h1 className="font-semibold text-slate-800 dark:text-slate-200">
-            Jeopardy
+            VM Jeopardy
           </h1>
         </div>
       </header>
@@ -69,7 +70,7 @@ function Content() {
     <div className="flex flex-col gap-6 max-w-lg mx-auto pt-60">
       <div className="flex flex-col gap-2 card min-w-100">
         <h2 className="font-bold text-xl text-slate-800 dark:text-slate-200">
-          Velkommen!
+          Velkommen til VM-Jeopardy! ⚽
         </h2>
         <p className="text-slate-600 font-semibold dark:text-slate-100 mt-2">
           No guts, no glory.
