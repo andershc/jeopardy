@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jeopardy",
-  description: "Jeopardy",
+  title: "VM Jeopardy",
+  description: "VM Jeopardy",
   icons: {
-    icon: "/cute-santa.png",
+    icon: "/football.svg",
   },
 };
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[url('/new-years-supper.png')] bg-cover bg-center bg-no-repeat`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[url('/world-cup-supper.png')] bg-cover bg-center bg-no-repeat`}
       >
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>

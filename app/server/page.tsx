@@ -11,10 +11,10 @@ export default async function ServerPage() {
     <main className="p-8 flex flex-col gap-6 mx-auto max-w-2xl">
       <div className="flex items-center justify-center gap-4">
         <div className="flex items-center gap-4">
-          <Image src="/cute-santa.png" alt="Convex Logo" width={48} height={48} />
+          <Image src="/football.svg" alt="Fotball" width={48} height={48} unoptimized />
         </div>
         <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-200">
-          Jeopardy
+          VM Jeopardy
         </h1>
       </div>
       <div className="flex flex-col gap-4 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 p-6 rounded-xl shadow-md">

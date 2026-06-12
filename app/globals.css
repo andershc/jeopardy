@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
-/* Design System - Cozy Festive Theme */
+/* Design System - World Cup Theme */
 :root {
   /* Base Colors */
-  --background: #fef7f0;
-  --foreground: #2d1810;
+  --background: #f4f8f4;
+  --foreground: #102418;
 
   /* Festive Primary Colors */
-  --festive-red: #c41e3a;
-  --festive-green: #2d5016;
+  --festive-red: #c8102e;
+  --festive-green: #1e8a4c;
   --festive-gold: #d4af37;
-  --festive-navy: #1a2332;
+  --festive-navy: #0a1f44;
 
   /* Cozy Warm Colors */
-  --warm-cream: #fef7f0;
-  --warm-beige: #f5e6d3;
-  --warm-brown: #8b6f47;
-  --warm-burgundy: #722f37;
+  --warm-cream: #f4f8f4;
+  --warm-beige: #e3eee2;
+  --warm-brown: #5b7a64;
+  --warm-burgundy: #8f0f24;
 
   /* Accent Colors */
   --accent-gold-light: #f4d03f;
@@ -24,22 +24,22 @@
   --accent-green-light: #52b788;
 
   /* Neutral Colors */
-  --neutral-50: #faf9f7;
-  --neutral-100: #f5f3f0;
-  --neutral-200: #e8e4dd;
-  --neutral-300: #d4ccc0;
-  --neutral-400: #b8a99a;
-  --neutral-500: #9d8a7a;
-  --neutral-600: #7a6b5d;
-  --neutral-700: #5d4e42;
-  --neutral-800: #3d332a;
-  --neutral-900: #2d1810;
+  --neutral-50: #f7faf7;
+  --neutral-100: #eef3ee;
+  --neutral-200: #dde6dd;
+  --neutral-300: #c3d1c5;
+  --neutral-400: #9fb2a3;
+  --neutral-500: #7e9384;
+  --neutral-600: #5f7366;
+  --neutral-700: #46584d;
+  --neutral-800: #2c3a31;
+  --neutral-900: #102418;
 
   /* Semantic Colors */
   --card-bg: #ffffff;
   --card-bg-opacity: rgba(255, 255, 255, 0.5);
-  --card-border: #e8e4dd;
-  --card-shadow: rgba(45, 24, 16, 0.08);
+  --card-border: #dde6dd;
+  --card-shadow: rgba(10, 31, 68, 0.08);
 
   /* Spacing Scale */
   --spacing-xs: 0.25rem;
@@ -56,15 +56,15 @@
   --radius-xl: 1.5rem;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(45, 24, 16, 0.05);
+  --shadow-sm: 0 1px 2px 0 rgba(10, 31, 68, 0.05);
   --shadow-md:
-    0 4px 6px -1px rgba(45, 24, 16, 0.1), 0 2px 4px -1px rgba(45, 24, 16, 0.06);
+    0 4px 6px -1px rgba(10, 31, 68, 0.1), 0 2px 4px -1px rgba(10, 31, 68, 0.06);
   --shadow-lg:
-    0 10px 15px -3px rgba(45, 24, 16, 0.1),
-    0 4px 6px -2px rgba(45, 24, 16, 0.05);
+    0 10px 15px -3px rgba(10, 31, 68, 0.1),
+    0 4px 6px -2px rgba(10, 31, 68, 0.05);
   --shadow-xl:
-    0 20px 25px -5px rgba(45, 24, 16, 0.1),
-    0 10px 10px -5px rgba(45, 24, 16, 0.04);
+    0 20px 25px -5px rgba(10, 31, 68, 0.1),
+    0 10px 10px -5px rgba(10, 31, 68, 0.04);
 
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
@@ -117,24 +117,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1a1612;
-    --foreground: #f5e6d3;
+    --background: #0c1626;
+    --foreground: #e3eee2;
 
-    --card-bg: #2d2419;
-    --card-bg-opacity: rgba(45, 36, 25, 0.8);
-    --card-border: #3d332a;
+    --card-bg: #14233d;
+    --card-bg-opacity: rgba(20, 35, 61, 0.8);
+    --card-border: #243a5c;
     --card-shadow: rgba(0, 0, 0, 0.3);
 
-    --neutral-50: #2d2419;
-    --neutral-100: #3d332a;
-    --neutral-200: #4a4035;
-    --neutral-300: #5d4e42;
-    --neutral-400: #7a6b5d;
-    --neutral-500: #9d8a7a;
-    --neutral-600: #b8a99a;
-    --neutral-700: #d4ccc0;
-    --neutral-800: #e8e4dd;
-    --neutral-900: #f5f3f0;
+    --neutral-50: #14233d;
+    --neutral-100: #1b2e4d;
+    --neutral-200: #243a5c;
+    --neutral-300: #314970;
+    --neutral-400: #4d6488;
+    --neutral-500: #7187a8;
+    --neutral-600: #93a7c2;
+    --neutral-700: #b8c7da;
+    --neutral-800: #d9e2ed;
+    --neutral-900: #f0f5fa;
   }
 }
 
@@ -144,7 +144,7 @@ body {
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
   line-height: 1.6;
-  background-image: url("/new-years-supper.png");
+  background-image: url("/world-cup-supper.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
