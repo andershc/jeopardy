@@ -566,6 +566,15 @@ function QuestionModal({
               {question.text}
             </p>
 
+            {question.questionImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={question.questionImage}
+                alt="Bilde til spørsmålet"
+                className="mt-4 max-h-[50vh] w-auto mx-auto rounded-lg border border-card-border"
+              />
+            )}
+
             {showAnswer && (
               <div className="mt-4 pt-4 border-t border-card-border">
                 <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-400 mb-2">
@@ -574,6 +583,14 @@ function QuestionModal({
                 <p className="text-xl font-bold text-foreground dark:text-neutral-100">
                   {question.answer}
                 </p>
+                {question.answerImage && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={question.answerImage}
+                    alt="Bilde til svaret"
+                    className="mt-4 max-h-[50vh] w-auto mx-auto rounded-lg border border-card-border"
+                  />
+                )}
               </div>
             )}
           </div>
