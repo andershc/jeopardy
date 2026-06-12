@@ -2,6 +2,22 @@ import { mutation } from "./_generated/server";
 
 // Seeds the "VM 2026" question set. Source of truth: convex/data/vm.csv
 // Run with: npx convex run seed:seedWorldCup
+//
+// Re-running reseeds: existing questions in the set are replaced with the
+// ones below (the questionSets row keeps its ID, so sessions that selected
+// the set still work — but in-progress games lose answered-question state).
+//
+// Picture questions: set questionImage and/or answerImage to an image path.
+// Drop files in public/questions/ and reference them as "/questions/<name>.png",
+// or use a full https:// URL. Example:
+//   {
+//     category: "Bilderunde",
+//     text: "Hvem mangler fra denne oppstillingen?",
+//     questionImage: "/questions/norge-1998.png",
+//     answer: "Tore André Flo",
+//     answerImage: "/questions/norge-1998-fasit.png",
+//     points: 300,
+//   },
 
 const QUESTION_SET_NAME = "VM 2026";
 
@@ -10,6 +26,8 @@ const QUESTIONS: {
   text: string;
   answer: string;
   points: number;
+  questionImage?: string;
+  answerImage?: string;
 }[] = [
   {
     category: "VM Historie",
@@ -167,13 +185,27 @@ export const seedWorldCup = mutation({
   args: {},
   handler: async (ctx) => {
     const existingSets = await ctx.db.query("questionSets").collect();
-    if (existingSets.some((set) => set.name === QUESTION_SET_NAME)) {
-      return `Question set "${QUESTION_SET_NAME}" already exists, skipping`;
-    }
+    const existingSet = existingSets.find(
+      (set) => set.name === QUESTION_SET_NAME,
+    );
 
-    const questionSetId = await ctx.db.insert("questionSets", {
-      name: QUESTION_SET_NAME,
-    });
+    let questionSetId;
+    if (existingSet) {
+      questionSetId = existingSet._id;
+      const oldQuestions = await ctx.db
+        .query("questions")
+        .withIndex("by_questionSet", (q) =>
+          q.eq("questionSetId", existingSet._id),
+        )
+        .collect();
+      for (const question of oldQuestions) {
+        await ctx.db.delete("questions", question._id);
+      }
+    } else {
+      questionSetId = await ctx.db.insert("questionSets", {
+        name: QUESTION_SET_NAME,
+      });
+    }
 
     for (const question of QUESTIONS) {
       await ctx.db.insert("questions", {
@@ -182,6 +214,6 @@ export const seedWorldCup = mutation({
       });
     }
 
-    return `Created "${QUESTION_SET_NAME}" with ${QUESTIONS.length} questions`;
+    return `${existingSet ? "Reseeded" : "Created"} "${QUESTION_SET_NAME}" with ${QUESTIONS.length} questions`;
   },
 });

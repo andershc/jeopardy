@@ -29,5 +29,8 @@ export default defineSchema({
     points: v.number(),
     category: v.string(),
     questionSetId: v.optional(v.id("questionSets")),
+    // Image path (/questions/foo.png in public/) or full URL
+    questionImage: v.optional(v.string()),
+    answerImage: v.optional(v.string()),
   }).index("by_questionSet", ["questionSetId"]),
 });
